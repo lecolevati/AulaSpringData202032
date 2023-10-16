@@ -1,0 +1,33 @@
+CREATE DATABASE aulaspringdata
+
+USE aulaspringdata
+
+SELECT * FROM categoria
+
+CREATE FUNCTION fn_depto_sigla(@codigo INT) 
+RETURNS @tabela TABLE (
+codigo		INT			,
+nome		VARCHAR(20)	,
+sigla		VARCHAR(3)
+)
+AS
+BEGIN
+	DECLARE @sigla	VARCHAR(3),
+			@nome	VARCHAR(20)
+	SELECT @nome = nome, @sigla = UPPER(SUBSTRING(nome, 1, 3)) FROM depto WHERE codigo = @codigo
+	INSERT INTO @tabela VALUES (@codigo, @nome, @sigla)
+	RETURN
+
+END
+
+DELETE depto
+SELECT * FROM depto
+SELECT * FROM fn_depto_sigla(1);
+
+CREATE PROCEDURE sp_depto_sigla(@codigo INT, @saida VARCHAR(100) OUTPUT) 
+AS
+	DECLARE @sigla	VARCHAR(3),
+			@nome	VARCHAR(20)
+	SELECT @sigla = UPPER(SUBSTRING(nome, 1, 3)) FROM depto WHERE codigo = @codigo
+	UPDATE depto SET sigla = @sigla WHERE codigo = @codigo
+	SET @saida = 'Sigla adicionada'
