@@ -29,28 +29,33 @@ public class EmpregadoController {
 	@Autowired
 	private IEmpregadoProjetoRepository epRep;
 
-	public void opEmp() {
+	@Transactional
+	public void opEmpr() {
 		Empregado e1 = new Empregado();
 		e1.setMatricula(12345);
 		e1.setNome("Fulano de Tal");
 		e1.setSexo("M");
 		e1.setTelefone("1122334455");
 		e1.setCargo("Pleno");
-
+		
 		Depto d = new Depto();
-		d.setCodigo(1);
+		d.setCodigo(1002);
 		d.setNome("Rec Humanos");
 		dRep.save(d);
-
+		
 		e1.setDepto(d);
-
 		eRep.save(e1);
 		
-		Projeto p = new Projeto(1001, "Projeto New", 500);
+		Projeto p = new Projeto(9991, "Projeto New", 500);
 		pRep.save(p);
 		
-		EmpregadoProjeto ep = 
-				new EmpregadoProjeto(e1, p, LocalDate.now());
+
+		EmpregadoProjeto ep = new EmpregadoProjeto(e1, p, LocalDate.now());
 		epRep.save(ep);
+		
+		EmpregadoProjetoId epId = new EmpregadoProjetoId(e1, p);
+		EmpregadoProjeto empregadoProjeto = epRep.findById(epId).get();
+		System.out.println(empregadoProjeto);
+	
 	}
 }
